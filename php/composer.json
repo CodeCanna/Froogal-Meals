@@ -1,0 +1,10 @@
+{
+	"name": "code-canna/froogal-meals",
+	"description": "The start of a simple meal planner.",
+	"require": {
+		"phpunit/phpunit": "@stable",
+		"phpunit/php-invoker": "@stable",
+		"predis/predis": "@stable",
+		"ramsey/uuid": "^3.8"
+	}
+}
