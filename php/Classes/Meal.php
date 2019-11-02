@@ -235,5 +235,3 @@ class Meal
     }
 }
 
-$thing = new Meal(Uuid::uuid4(), "Spaghetti and Meatballs", "Dinner", new DateTime(), ['noodles', 'beef', 'tomato sauce'], 400);
-var_dump($thing);
