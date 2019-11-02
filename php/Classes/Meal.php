@@ -1,6 +1,6 @@
 <?php
 
-namespace froogalmeals\Meal;
+namespace CodeCann\Meal;
 
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
@@ -9,7 +9,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use DateTime;
 
 /**
- * This is the main class for 
+ * This is the Meal class.  This class represents a meal stored on Froogal-Meals
  */
 class Meal
 {
@@ -234,4 +234,3 @@ class Meal
         $this->calorieCount = $calorieCount;
     }
 }
-
