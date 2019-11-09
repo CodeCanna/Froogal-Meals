@@ -45,9 +45,10 @@ try {
         try {
             // Get POST values
             foreach ($_POST as $meal) {
-                echo $_POST[$meal];
+                
             }
-            $redis->set('mealId', $_POST['mealId']);
+            $redis->set('mealId', Uuid::uuid4());
+            $redis->set('mealName', $_POST['mealName']);
         } catch (Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);
             throw (new $exceptionType($exception->getMessage()));

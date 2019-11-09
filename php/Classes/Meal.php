@@ -15,10 +15,7 @@ use SebastianBergmann\Diff\InvalidArgumentException;
  * @author CodeCanna
  */
 class Meal
-{
-    use ValidateUuid;
-    use ValidateDate;
-    
+{   
     /**
      * @var $mealId
      */
