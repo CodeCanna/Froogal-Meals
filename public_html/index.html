@@ -23,11 +23,21 @@
 
             <!-- Meal Type -->
             <label for="mealType">Meal Type</label>
-            <select class="form-control" aria-placeholder="Meal Type">
+            <select class="form-control">
                 <option>Breakfast</option>
                 <option>Lunch</option>
                 <option>Dinner</option>
             </select>
+
+            <!-- Meal Date -->
+            <label for="mealDate">Meal Date:</label>
+            <input type="date" name="mealDate" id="mealDate">
+
+            <!-- Meal Ingredients -->
+            <label for="mealIngr">Meal Ingredients:</label>
+            <input type="text" name="mealIngr" id="mealIngr" placeholder="Your meal's main ingredients">
+
+            <!-- Meal Calorie Count -->
         </div>
 
         <button type="submit" onclick="submitMeal" class="btn btn-primary">Submit</button>

@@ -2,7 +2,7 @@
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 3) . "/Classes/Meal.php");
 
-use CodeCann\Meal;
+use CodeCanna\Meal\Meal;
 use PHPUnit\Framework\InvalidArgumentException;
 use PHPUnit\Framework\MockObject\Stub\Exception;
 use Predis\Autoloader;
@@ -43,10 +43,11 @@ try {
         // What to do if request is POST
     } else if ($method === 'POST') {
         try {
-            // Get POST values
-            foreach ($_POST as $meal) {
-                
-            }
+            // Create new Meal
+            $meal = new Meal(Uuid::uuid4(), $_POST['mealName'], $_POST['mealType'], $_POST['mealDate'], $_POST['mealIngr'], $_POST['calorieCount']);
+            
+            var_dump($meal);
+
             $redis->set('mealId', Uuid::uuid4());
             $redis->set('mealName', $_POST['mealName']);
         } catch (Predis\Response\ServerException $exception) {
@@ -55,7 +56,9 @@ try {
         }
     }
 } catch (Exception $exception) {
-    throw new $exception;
+    $exceptionType = get_class($exception);
+    throw new $exceptionType($exception->getMessage());
 } catch (TypeError $exception) {
-    throw new TypeError("No");
+    $exceptionType = get_class($exception);
+    throw new $exceptionType($exception->getMessage());
 }
