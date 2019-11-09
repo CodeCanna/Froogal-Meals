@@ -43,13 +43,13 @@ try {
         // What to do if request is POST
     } else if ($method === 'POST') {
         try {
-            // Create new Meal
-            $meal = new Meal(Uuid::uuid4(), $_POST['mealName'], $_POST['mealType'], $_POST['mealDate'], $_POST['mealIngr'], $_POST['calorieCount']);
-            
-            var_dump($meal);
+            // Create DateTime object from Date string
+            $mealDateString = date($_POST['mealDate']);
+            $mealDate = new DateTime($mealDateString);
 
-            $redis->set('mealId', Uuid::uuid4());
-            $redis->set('mealName', $_POST['mealName']);
+            // Create new Meal
+            $meal = new Meal(Uuid::uuid4(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngr'], $_POST['calorieCount']);
+
         } catch (Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);
             throw (new $exceptionType($exception->getMessage()));

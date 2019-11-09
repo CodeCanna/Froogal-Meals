@@ -22,8 +22,8 @@
             <input type="text" name="mealName" id="mealName" placeholder="Name Your Meal">
 
             <!-- Meal Type -->
-            <label for="mealType">Meal Type</label>
-            <select class="form-control">
+            <label for="mealType">Meal Type:</label>
+            <select name="mealType" class="form-control">
                 <option>Breakfast</option>
                 <option>Lunch</option>
                 <option>Dinner</option>
@@ -38,6 +38,8 @@
             <input type="text" name="mealIngr" id="mealIngr" placeholder="Your meal's main ingredients">
 
             <!-- Meal Calorie Count -->
+            <label for="calorieCount">Calorie Count:</label>
+            <input type="number" name="calorieCount" id="calorieCount">
         </div>
 
         <button type="submit" onclick="submitMeal" class="btn btn-primary">Submit</button>

@@ -8,6 +8,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use DateTime;
 use SebastianBergmann\Diff\InvalidArgumentException;
+use TypeError;
 
 /**
  * This is the Meal class.  This class represents a meal stored on Froogal-Meals
@@ -83,10 +84,10 @@ class Meal
     public function setMealId($mealId): void
     {
         if ($mealId === null) {
-            throw new \InvalidArgumentException("Meal ID is null?");
+            throw new InvalidArgumentException("Meal ID is null?");
         }
         if (empty($mealId)) {
-            throw new \InvalidArgumentException("Meal ID cannot be empty...");
+            throw new InvalidArgumentException("Meal ID cannot be empty...");
         }
 
         try {
@@ -115,12 +116,12 @@ class Meal
     {
         // Check if $mealName is null
         if ($mealName === null) {
-            throw (new \InvalidArgumentException("Meal Name is null?"));
+            throw (new InvalidArgumentException("Meal Name is null?"));
         }
 
         // Check if $mealName is empty
         if (empty($mealName)) {
-            throw (new \InvalidArgumentException("Meal name cannot be empty..."));
+            throw (new InvalidArgumentException("Meal name cannot be empty..."));
         }
 
         // Set $mealName
@@ -145,11 +146,11 @@ class Meal
     {
         // Check if $mealType is null
         if ($mealType === null) {
-            throw new \InvalidArgumentException("Meal Type is null?");
+            throw new InvalidArgumentException("Meal Type is null?");
         }
 
         if (empty($mealType)) {
-            throw new \InvalidArgumentException("Meal Type cannot be empty...");
+            throw new InvalidArgumentException("Meal Type cannot be empty...");
         }
 
         $this->mealType = $mealType;
@@ -172,12 +173,12 @@ class Meal
     {
         // Check if $mealDate is null
         if ($mealDate === null) {
-            throw new \InvalidArgumentException("Meal Date is null?");
+            throw new InvalidArgumentException("Meal Date is null?");
         }
 
         // Check if $mealDate is empty
         if (empty($mealDate)) {
-            throw new \InvalidArgumentException("Meal date can't be empty...");
+            throw new InvalidArgumentException("Meal date can't be empty...");
         }
 
         // Check if $mealDate is of type DateTime
@@ -186,7 +187,7 @@ class Meal
             $typeGiven = gettype($mealDate);
             $errorMessage = "Meal date must be of type DateTime. " . strtoupper($typeGiven) . " given...";
 
-            throw new \TypeError($errorMessage);
+            throw new TypeError($errorMessage);
         }
 
         // Set meal date
@@ -223,12 +224,12 @@ class Meal
     {
         // Check if $calorieCount is null
         if ($calorieCount === null) {
-            throw new \InvalidArgumentException("Calorie Count is null?");
+            throw new InvalidArgumentException("Calorie Count is null?");
         }
 
         // Check if $calorieCount is empty
         if (empty($calorieCount)) {
-            throw new \InvalidArgumentException("Calorie count cannot be empty...");
+            throw new InvalidArgumentException("Calorie count cannot be empty...");
         }
 
         // Check if $calorieCount is of type int
@@ -237,7 +238,7 @@ class Meal
             $typeGiven = gettype($calorieCount);
             $errorMessage = "Meal date must be of type DateTime. " . strtoupper($typeGiven) . " given...";
 
-            throw new \TypeError($errorMessage);
+            throw new TypeError($errorMessage);
         }
 
         // Set the calorie count
