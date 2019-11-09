@@ -5,6 +5,7 @@
 		"phpunit/phpunit": "@stable",
 		"phpunit/php-invoker": "@stable",
 		"predis/predis": "@stable",
-		"ramsey/uuid": "^3.8"
+		"ramsey/uuid": "@stable",
+		"ext-json": "@stable"
 	}
 }

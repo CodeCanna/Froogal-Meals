@@ -23,8 +23,11 @@ try {
     $redis->connect('127.0.0.1');
 
     // Check the connection by pinging the server
-    if (!$redis->ping()) {
-        echo "Couldn't connect to Redis...";
+    try {
+        $redis->ping();
+    } catch (Predis\Connection\ConnectionException $exception) {
+        $exceptionType = get_class($exception);
+        throw new $exceptionType($exception->getMessage());
     }
 
     // What to do if the reqeust is GET
@@ -36,12 +39,13 @@ try {
             $exceptionType = get_class($exception);
             throw new $exceptionType($exception->getMessage());
         }
-    // What to do if request is POST
+
+        // What to do if request is POST
     } else if ($method === 'POST') {
         try {
             // Get POST values
             foreach ($_POST as $meal) {
-                $redis->set(Uuid::uuid4(), $meal);
+                echo $_POST[$meal];
             }
             $redis->set('mealId', $_POST['mealId']);
         } catch (Predis\Response\ServerException $exception) {

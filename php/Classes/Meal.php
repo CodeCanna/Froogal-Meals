@@ -7,12 +7,18 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use DateTime;
+use SebastianBergmann\Diff\InvalidArgumentException;
 
 /**
  * This is the Meal class.  This class represents a meal stored on Froogal-Meals
+ * 
+ * @author CodeCanna
  */
 class Meal
 {
+    use ValidateUuid;
+    use ValidateDate;
+    
     /**
      * @var $mealId
      */
@@ -64,7 +70,7 @@ class Meal
 
     // ### Getters and Setters ### \\
 
-    /**
+    /** TODO
      * Gets the meal ID
      * @return uuid
      */
@@ -84,6 +90,13 @@ class Meal
         }
         if (empty($mealId)) {
             throw new \InvalidArgumentException("Meal ID cannot be empty...");
+        }
+
+        try {
+            $uuid = self::validateUuid($mealId);
+        } catch(InvalidArgumentException $exception) {
+            $exceptionType = get_class($exception);
+            throw new $exceptionType($exception->getMessage());
         }
 
         $this->mealId = $mealId;
