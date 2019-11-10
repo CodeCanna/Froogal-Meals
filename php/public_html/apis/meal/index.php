@@ -49,6 +49,31 @@ try {
 
             // Create new Meal
             $meal = new Meal(Uuid::uuid4(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngr'], $_POST['calorieCount']);
+            
+            // Insert Object Values into Redis
+            
+            /*
+            Key Order:
+                0: calorieCount
+                1: mainIngredients
+                2: mealDate
+                3: mainIngredients
+                4: calorieCount
+            */
+            $redis->lpush('Meal', $meal->getMealId(), $meal->getMealName(), $meal->getMealType(), $meal->getMealDate()->format('Y-m-d'), $meal->getMainIngredients(), $meal->getCalorieCount());
+            
+            // Save meal to disk
+            $redis->bgsave();
+            echo $redis->lastsave();
+
+            /*
+            $redis->set('mealId', $meal->getMealId());
+            $redis->set('mealName', $meal->getMealName());
+            $redis->set('mealType', $meal->getMealType());
+            $redis->set('mealDate', $meal->getMealDate()->format('Y-m-d'));
+            $redis->set('mealIngr', $meal->getMainIngrds());
+            $redis->set('calorieCount', $meal->getCalorieCount());
+            */
 
         } catch (Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);

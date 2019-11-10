@@ -16,7 +16,7 @@ use TypeError;
  * @author CodeCanna
  */
 class Meal
-{   
+{
     /**
      * @var $mealId
      */
@@ -55,7 +55,7 @@ class Meal
      * @param $calorieCount
      * @param $mealDate
      */
-    public function __construct(uuid $mealId, string $mealName, string $mealType, DateTime $mealDate, array $mainIngredients, int $calorieCount)
+    public function __construct(uuid $mealId, string $mealName, string $mealType, DateTime $mealDate, string $mainIngredients, int $calorieCount)
     {
         // Set passed object values
         $this->setMealId($mealId);
@@ -70,9 +70,9 @@ class Meal
 
     /** TODO
      * Gets the meal ID
-     * @return uuid
+     * @return Uuid
      */
-    public function getMealId(): uuid
+    public function getMealId(): Uuid
     {
         return $this->mealId;
     }
@@ -81,7 +81,7 @@ class Meal
      * Sets the meal ID
      * @param $mealId
      */
-    public function setMealId($mealId): void
+    public function setMealId(Uuid $mealId): void
     {
         if ($mealId === null) {
             throw new InvalidArgumentException("Meal ID is null?");
@@ -91,7 +91,7 @@ class Meal
         }
 
         try {
-            $uuid = self::validateUuid($mealId);
+            //$uuid = self::validateUuid($mealId);
         } catch(InvalidArgumentException $exception) {
             $exceptionType = get_class($exception);
             throw new $exceptionType($exception->getMessage());
@@ -142,7 +142,7 @@ class Meal
      * Sets the meal type
      * @param $mealType
      */
-    public function setMealType($mealType): void
+    public function setMealType(string $mealType): void
     {
         // Check if $mealType is null
         if ($mealType === null) {
@@ -196,9 +196,9 @@ class Meal
 
     /**
      * Gets the main ingredients from the meal
-     * @return array
+     * @return string
      */
-    public function getMainIngrds(): array
+    public function getMainIngredients(): string
     {
         return $this->mainIngredients;
     }

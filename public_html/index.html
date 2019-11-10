@@ -15,35 +15,38 @@
 </head>
 
 <body>
-    <form action="http://localhost:8000/index.php" method="POST">
-        <div class="form-group">
-            <!-- Meal Name -->
-            <label for="mealName">Meal Name:</label>
-            <input type="text" name="mealName" id="mealName" placeholder="Name Your Meal">
+    <div class="container-fluid">
+        <form action="http://192.168.0.110:8000/index.php" method="POST">
+            <div class="form-group">
+                <!-- Meal Name -->
+                <label for="mealName">Meal Name:</label>
+                <input type="text" name="mealName" class="form-control" id="mealName" placeholder="Name Your Meal"/>
 
-            <!-- Meal Type -->
-            <label for="mealType">Meal Type:</label>
-            <select name="mealType" class="form-control">
-                <option>Breakfast</option>
-                <option>Lunch</option>
-                <option>Dinner</option>
-            </select>
+                <!-- Meal Date -->
+                <label for="mealDate">Meal Date:</label>
+                <input type="date" name="mealDate" class="form-control" id="mealDate"/>
 
-            <!-- Meal Date -->
-            <label for="mealDate">Meal Date:</label>
-            <input type="date" name="mealDate" id="mealDate">
+                <!-- Meal Ingredients -->
+                <label for="mealIngr">Meal Ingredients:</label>
+                <input type="text" name="mealIngr" class="form-control" id="mealIngr" placeholder="Your meal's main ingredients"/>
 
-            <!-- Meal Ingredients -->
-            <label for="mealIngr">Meal Ingredients:</label>
-            <input type="text" name="mealIngr" id="mealIngr" placeholder="Your meal's main ingredients">
+                <!-- Meal Calorie Count -->
+                <label for="calorieCount">Calorie Count:</label>
+                <input type="number" name="calorieCount" class="form-control" id="calorieCount">
 
-            <!-- Meal Calorie Count -->
-            <label for="calorieCount">Calorie Count:</label>
-            <input type="number" name="calorieCount" id="calorieCount">
-        </div>
+                <!-- Meal Type -->
+                <label for="mealType">Meal Type:</label>
+                <select name="mealType" class="form-control">
+                    <option>Breakfast</option>
+                    <option>Lunch</option>
+                    <option>Dinner</option>
+                </select>
+            </div>
 
-        <button type="submit" onclick="submitMeal" class="btn btn-primary">Submit</button>
-    </form>
+            <button type="submit" onclick="submitMeal" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
 
     <!-- AXIOS JS -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
