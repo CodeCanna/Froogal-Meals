@@ -16,6 +16,7 @@ $reply->status = 200;
 $reply->data = null;
 
 try {
+    // Get request method
     $method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
 
     // Create a new redis instance and connect to it
@@ -53,18 +54,22 @@ try {
             // Insert Object Values into Redis
             
             /*
+            Due the design of RedisDB these lists or tables if you will, must be accessed through a numbered index.
             Key Order:
                 0: calorieCount
                 1: mainIngredients
                 2: mealDate
-                3: mainIngredients
-                4: calorieCount
+                3: mealType
+                4: mealName
             */
-            $redis->lpush('Meal', $meal->getMealId(), $meal->getMealName(), $meal->getMealType(), $meal->getMealDate()->format('Y-m-d'), $meal->getMainIngredients(), $meal->getCalorieCount());
+            $redis->lpush($meal->getMealName(), $meal->getMealId(), $meal->getMealName(), $meal->getMealType(), $meal->getMealDate()->format('Y-m-d'), $meal->getMainIngredients(), $meal->getCalorieCount());
             
             // Save meal to disk
             $redis->bgsave();
-            echo $redis->lastsave();
+            if(!$redis->lastsave()) {
+                echo "Couldn't save your selection.";
+            }
+            echo "Save Successful!";
 
             /*
             $redis->set('mealId', $meal->getMealId());
