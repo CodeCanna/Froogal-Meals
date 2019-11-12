@@ -35,7 +35,8 @@ try {
     if ($method === 'GET') {
         try {
             // Get value from redis
-            echo $redis->get($_GET['mealNameKey']);
+            $reply->data = Meal::getMealByMealName($redis, $_GET['mealName']);
+            var_dump($reply->data);
         } catch (Exception | TypeError | InvalidArgumentException | Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);
             throw new $exceptionType($exception->getMessage());
@@ -49,7 +50,7 @@ try {
             $mealDate = new DateTime($mealDateString);
 
             // Create new Meal
-            $meal = new Meal(Uuid::uuid4(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngr'], $_POST['calorieCount']);
+            $meal = new Meal(Uuid::uuid4()->toString(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngr'], $_POST['calorieCount']);
             
             // Insert Object Values into Redis
             
@@ -70,15 +71,6 @@ try {
                 echo "Couldn't save your selection.";
             }
             echo "Save Successful!";
-
-            /*
-            $redis->set('mealId', $meal->getMealId());
-            $redis->set('mealName', $meal->getMealName());
-            $redis->set('mealType', $meal->getMealType());
-            $redis->set('mealDate', $meal->getMealDate()->format('Y-m-d'));
-            $redis->set('mealIngr', $meal->getMainIngrds());
-            $redis->set('calorieCount', $meal->getCalorieCount());
-            */
 
         } catch (Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);

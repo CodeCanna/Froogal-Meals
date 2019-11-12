@@ -55,7 +55,7 @@ class Meal
      * @param $calorieCount
      * @param $mealDate
      */
-    public function __construct(uuid $mealId, string $mealName, string $mealType, DateTime $mealDate, string $mainIngredients, int $calorieCount)
+    public function __construct(string $mealId, string $mealName, string $mealType, DateTime $mealDate, string $mainIngredients, int $calorieCount)
     {
         // Set passed object values
         $this->setMealId($mealId);
@@ -70,9 +70,9 @@ class Meal
 
     /** TODO
      * Gets the meal ID
-     * @return Uuid
+     * @return $this->mealId
      */
-    public function getMealId(): Uuid
+    public function getMealId(): string
     {
         return $this->mealId;
     }
@@ -81,7 +81,7 @@ class Meal
      * Sets the meal ID
      * @param $mealId
      */
-    public function setMealId(Uuid $mealId): void
+    public function setMealId(string $mealId): void
     {
         if ($mealId === null) {
             throw new InvalidArgumentException("Meal ID is null?");
@@ -92,7 +92,7 @@ class Meal
 
         try {
             //$uuid = self::validateUuid($mealId);
-        } catch(InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             $exceptionType = get_class($exception);
             throw new $exceptionType($exception->getMessage());
         }
@@ -243,5 +243,34 @@ class Meal
 
         // Set the calorie count
         $this->calorieCount = $calorieCount;
+    }
+
+    // ### Get Foo by Bars ### \\
+
+    /**
+     * @param $mealName
+     * @param $redis a redis instance
+     * @return CodeCanna\Meal
+     */
+    public function getMealByMealName($redis, string $mealName): Meal
+    {
+        /*
+            Due the design of RedisDB these lists or tables if you will, must be accessed through a numbered index.
+            Key Order:
+                0: calorieCount
+                1: mainIngredients
+                2: mealDate
+                3: mealType
+                4: mealName
+                5: mealId
+        */
+
+        // Convert date string to DateTime object
+        $date = new DateTime($redis->lindex($mealName, 2));
+
+        // Build meal from redis indexes
+        $meal = new Meal($redis->lindex($mealName, 5), $redis->lindex($mealName, 4), $redis->lindex($mealName, 3), $date, $redis->lindex($mealName, 1), $redis->lindex($mealName, 0));
+
+        return $meal;
     }
 }
