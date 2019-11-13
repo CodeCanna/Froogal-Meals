@@ -46,7 +46,6 @@ try {
                 try {
                     $reply->data = Meal::getMealByMealName($redis, $mealName);
                 } catch(\InvalidArgumentException $exception) {
-                    $reply->status = 404;
                     $reply->data = "Meal not found...";
                 }
             }
@@ -85,7 +84,6 @@ try {
             $lastLastSave = $redis->lastsave();
             $redis->bgsave();
             if ($redis->lastsave() === $lastLastSave) {
-                $reply->status = 500;
                 $reply->data = "Couldn't save your selection";
             }
             $reply->status = 200;
