@@ -267,18 +267,23 @@ class Meal
 
         // Check if list exists in redis
         if(sizeof($redis->keys($mealName)) <= 0) {
-            echo "Meal doesn't exist...";
             throw new \InvalidArgumentException("Meal not found...");
         }
 
+        // If list exists get all of it's elements
+        $mealData = $redis->lrange($mealName, 0, -1);
+
         // Convert date string to DateTime object
-        $date = new DateTime($redis->lindex($mealName, 2));
+        $date = new DateTime($mealData[2]);
+        $mealData[2] = $date;
 
         // Convert $calorieCount to int
-        $convertedCalorieCount = intval($redis->lindex($mealName, 0));
+        $convertedCalorieCount = intval($mealData[0]);
+        $mealData[0] = $convertedCalorieCount;
 
-        // Build meal from redis indexes
-        $meal = new Meal($redis->lindex($mealName, 5), $redis->lindex($mealName, 4), $redis->lindex($mealName, 3), $date, $redis->lindex($mealName, 1), $convertedCalorieCount);
+
+        // Build meal from redis list
+        $meal = new Meal($mealData[5], $mealData[4], $mealData[3], $mealData[2], $mealData[1], $mealData[0]);
 
         return $meal;
     }

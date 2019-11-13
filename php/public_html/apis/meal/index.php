@@ -43,8 +43,12 @@ try {
 
             // If mealName is NOT empty
             if(!empty($mealName)) {
-                // echo "Meal Name:" . $mealName;
-                $reply->data = Meal::getMealByMealName($redis, $mealName);
+                try {
+                    $reply->data = Meal::getMealByMealName($redis, $mealName);
+                } catch(\InvalidArgumentException $exception) {
+                    $reply->status = 404;
+                    $reply->data = "Meal not found...";
+                }
             }
             
         } catch (Exception | TypeError | InvalidArgumentException | Predis\Response\ServerException $exception) {
@@ -59,8 +63,10 @@ try {
             $mealDateString = date($_POST['mealDate']);
             $mealDate = new DateTime($mealDateString);
 
+            $convertedCalorieCount = intval($_POST['calorieCount']);
+
             // Create new Meal
-            $meal = new Meal(Uuid::uuid4()->toString(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngredients'], $_GET['calorieCount']);
+            $meal = new Meal(Uuid::uuid4()->toString(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngredients'], $convertedCalorieCount);
 
             // Insert Object Values into Redis
             /*
@@ -79,9 +85,11 @@ try {
             $lastLastSave = $redis->lastsave();
             $redis->bgsave();
             if ($redis->lastsave() === $lastLastSave) {
-                echo "Couldn't save your selection.";
+                $reply->status = 500;
+                $reply->data = "Couldn't save your selection";
             }
-            echo "Save Successful!";
+            $reply->status = 200;
+            $reply->data = 'Meal Saved Successfully...';
         } catch (Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);
             throw (new $exceptionType($exception->getMessage()));
@@ -95,11 +103,11 @@ try {
     throw new $exceptionType($exception->getMessage());
 }
 
-//header("Content-type: application/json");
+header("Content-type: application/json");
 
 // If the reply data is empty, unset the variable
 if($reply->data === null) {
 	unset($reply->data);
 }
 
-echo json_encode($reply->data);
+echo json_encode($reply);
