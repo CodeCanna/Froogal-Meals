@@ -16,35 +16,8 @@
 
 <body>
     <div class="container-fluid">
-        <form action="http://192.168.43.114:8000" method="POST">
-            <div class="form-group">
-                <!-- Meal Name -->
-                <label for="mealName">Meal Name:</label>
-                <input type="text" name="mealName" class="form-control" id="mealName" placeholder="Name Your Meal"/>
-
-                <!-- Meal Date -->
-                <label for="mealDate">Meal Date:</label>
-                <input type="date" name="mealDate" class="form-control" id="mealDate"/>
-
-                <!-- Meal Ingredients -->
-                <label for="mealIngr">Meal Ingredients:</label>
-                <input type="text" name="mealIngr" class="form-control" id="mealIngr" placeholder="Your meal's main ingredients"/>
-
-                <!-- Meal Calorie Count -->
-                <label for="calorieCount">Calorie Count:</label>
-                <input type="number" name="calorieCount" class="form-control" id="calorieCount">
-
-                <!-- Meal Type -->
-                <label for="mealType">Meal Type:</label>
-                <select name="mealType" class="form-control">
-                    <option>Breakfast</option>
-                    <option>Lunch</option>
-                    <option>Dinner</option>
-                </select>
-            </div>
-
-            <button type="submit" onclick="submitMeal" class="btn btn-primary">Submit</button>
-        </form>
+        <a class="btn btn-primary" href="pages/new_meal_form.html">Add New Meal</a>
+        <a class="btn btn-primary" href="http://192.168.0.110:8000">Show Meals</a>
     </div>
 
 

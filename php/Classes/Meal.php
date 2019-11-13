@@ -5,10 +5,10 @@ namespace CodeCanna\Meal;
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use DateTime;
-use SebastianBergmann\Diff\InvalidArgumentException;
+use SplFixedArray;
 use TypeError;
+use Predis\Client;
 
 /**
  * This is the Meal class.  This class represents a meal stored on Froogal-Meals
@@ -252,7 +252,7 @@ class Meal
      * @param $redis a redis instance
      * @return CodeCanna\Meal
      */
-    public function getMealByMealName($redis, string $mealName): Meal
+    public function getMealByMealName(Client $redis, string $mealName): Meal
     {
         /*
             Due the design of RedisDB these lists or tables if you will, must be accessed through a numbered index.
@@ -265,12 +265,43 @@ class Meal
                 5: mealId
         */
 
+        // Check if list exists in redis
+        if(sizeof($redis->keys($mealName)) <= 0) {
+            echo "Meal doesn't exist...";
+            throw new \InvalidArgumentException("Meal not found...");
+        }
+
         // Convert date string to DateTime object
         $date = new DateTime($redis->lindex($mealName, 2));
 
+        // Convert $calorieCount to int
+        $convertedCalorieCount = intval($redis->lindex($mealName, 0));
+
         // Build meal from redis indexes
-        $meal = new Meal($redis->lindex($mealName, 5), $redis->lindex($mealName, 4), $redis->lindex($mealName, 3), $date, $redis->lindex($mealName, 1), $redis->lindex($mealName, 0));
+        $meal = new Meal($redis->lindex($mealName, 5), $redis->lindex($mealName, 4), $redis->lindex($mealName, 3), $date, $redis->lindex($mealName, 1), $convertedCalorieCount);
 
         return $meal;
     }
+
+    /**
+     * @param $redis
+     * @return SplFixedArray
+     */
+    public function getAllMeals(Client $redis): array {
+        // Get all RedisDB list names
+        $mealNames = $redis->keys('*');
+
+        return $mealNames;
+    }
+
+    /**
+	 * Returns an array of state variables formatted for JSON serialization.
+	 *
+	 * @return array
+	 */
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+		$fields["mealId"] = $this->mealId->toString();
+		return($fields);
+	}
 }
