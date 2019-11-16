@@ -7,7 +7,8 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 use DateTime;
 use SplFixedArray;
-use TypeError;
+use \TypeError;
+use \InvalidArgumentException;
 use Predis\Client;
 
 /**
@@ -70,7 +71,7 @@ class Meal
 
     /** TODO
      * Gets the meal ID
-     * @return $this->mealId
+     * @return CodeCanna\Meal\Uuid
      */
     public function getMealId(): string
     {
@@ -91,7 +92,7 @@ class Meal
         }
 
         try {
-            //$uuid = self::validateUuid($mealId);
+            //$uuid = Uuid::validateUuid($mealId);
         } catch (InvalidArgumentException $exception) {
             $exceptionType = get_class($exception);
             throw new $exceptionType($exception->getMessage());
@@ -286,6 +287,35 @@ class Meal
         $meal = new Meal($mealData[5], $mealData[4], $mealData[3], $mealData[2], $mealData[1], $mealData[0]);
 
         return $meal;
+    }
+
+    /**
+     * @param $redis
+     * @param $mealId
+     * @return Meal
+     */
+    public function getMealIdByMealName(Client $redis, string $mealName): string {
+        // Get given type and generate a custome error message
+        $givenType = gettype($mealName);
+
+        if(empty($mealName)) {
+            throw new InvalidArgumentException("getMealIdByMealName(): mealName cannot be empty...");
+        }
+
+        if(!gettype($givenType) === 'string') {
+            throw new TypeError("getMealIdByMealName(): string expected, got $givenType");
+        }
+
+        // Check if list exists in redis
+        if(sizeof($redis->keys($mealName)) <= 0) {
+            throw new \InvalidArgumentException("Meal not found...");
+        }
+
+        // Get all data from $mealName
+        $mealData = $redis->lindex($mealName, 0, -1);
+
+        // Return the array index container the ID associated with $mealName
+        return $mealData[5];
     }
 
     /**

@@ -3,9 +3,7 @@ require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 3) . "/Classes/Meal.php");
 
 use CodeCanna\Meal\Meal;
-use PHPUnit\Framework\InvalidArgumentException;
-use PHPUnit\Framework\MockObject\Stub\Exception;
-use Predis\Autoloader;
+use \InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Predis\Client;
 
@@ -34,22 +32,26 @@ try {
     if ($method === 'GET') {
         try {
             // Filter and Sanitize input
+            $mealId = filter_input(INPUT_GET, 'mealId', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealName = filter_input(INPUT_GET, 'mealName', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealType = filter_input(INPUT_GET, 'mealType', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealDate = filter_input(INPUT_GET, 'mealDate', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUITES);
+            $mealIngredients = filter_input(INPUT_GET, 'mainIngredients', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealCalorieCount = filter_input(INPUT_GET, 'mealCalorieCount', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // If no get data is set reply data to all meals
             if(empty($mealName)) {
                 $reply->data = Meal::getAllMeals($redis);
-            }
-
-            // If mealName is NOT empty
-            if(!empty($mealName)) {
+            } elseif(!empty($mealName)) {
                 try {
                     $reply->data = Meal::getMealByMealName($redis, $mealName);
                 } catch(\InvalidArgumentException $exception) {
                     $reply->data = "Meal not found...";
                 }
+            } elseif(!empty($mealName)) {
+
             }
-            
+
         } catch (Exception | TypeError | InvalidArgumentException | Predis\Response\ServerException $exception) {
             $exceptionType = get_class($exception);
             throw new $exceptionType($exception->getMessage());
