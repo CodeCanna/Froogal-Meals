@@ -1,23 +1,46 @@
 {
-  "name": "froogal-meals",
-  "version": "1.0.0",
-  "description": "The start of a simple meal planner with possability to grow.",
-  "main": "js/index.js",
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "js/froogalMealsTest.js"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeCanna/Froogal-Meals.git"
-  },
-  "author": "@CodeCanna",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CodeCanna/Froogal-Meals/issues"
-  },
-  "homepage": "https://github.com/CodeCanna/Froogal-Meals#readme",
   "dependencies": {
-    "vue": "2.6.10",
-    "axios": "0.19.0"
-  }
+    "core-js": "^3.3.2",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.0.0",
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
 }
