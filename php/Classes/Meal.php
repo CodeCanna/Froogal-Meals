@@ -266,6 +266,9 @@ class Meal
                 5: mealId
         */
 
+        $meal = \unserialize($redis->get($mealName));
+
+        /*
         // Check if list exists in redis
         if(sizeof($redis->keys($mealName)) <= 0) {
             throw new \InvalidArgumentException("Meal not found...");
@@ -285,6 +288,7 @@ class Meal
 
         // Build meal from redis list
         $meal = new Meal($mealData[5], $mealData[4], $mealData[3], $mealData[2], $mealData[1], $mealData[0]);
+        */
 
         return $meal;
     }
@@ -322,21 +326,29 @@ class Meal
      * @param $redis
      * @return SplFixedArray
      */
-    public function getAllMeals(Client $redis): array {
+    public function getAllMeals(Client $redis) {
         // Get all RedisDB list names
         $mealNames = $redis->keys('*');
 
-        return $mealNames;
-    }
+        // Create array to store serialized meal objects
+        $mealSerialized = [];
 
-    /**
-	 * Returns an array of state variables formatted for JSON serialization.
-	 *
-	 * @return array
-	 */
-	public function jsonSerialize() : array {
-		$fields = get_object_vars($this);
-		$fields["mealId"] = $this->mealId->toString();
-		return($fields);
-	}
+        // Create array to store unserialized meal objects
+        $mealUnserialized = [];
+
+        // Create array of SERIALIZED meal objects
+        for($i=0; $i<sizeof($mealNames); $i++) {
+            $meal = $redis->get($mealNames[$i]);
+            array_push($mealSerialized, $meal);
+        }
+
+        // Unserialize meals
+        for($i=0; $i<sizeof($mealSerialized); $i++) {
+            $obj = \unserialize($mealSerialized[$i]);
+            array_push($mealUnserialized, $obj);
+            
+        }
+
+        return $mealUnserialized;
+    }
 }

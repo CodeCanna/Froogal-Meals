@@ -64,7 +64,7 @@ try {
             $mealDateString = date($_POST['mealDate']);
             $mealDate = new DateTime($mealDateString);
 
-            $convertedCalorieCount = intval($_POST['calorieCount']);
+            $convertedCalorieCount = intval($_POST['mealCalorieCount']);
 
             // Create new Meal
             $meal = new Meal(Uuid::uuid4()->toString(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngredients'], $convertedCalorieCount);
@@ -80,7 +80,11 @@ try {
                 4: mealName
                 5: mealId
             */
-            $redis->lpush($meal->getMealName(), $meal->getMealId(), $meal->getMealName(), $meal->getMealType(), $meal->getMealDate()->format('Y-m-d'), $meal->getMainIngredients(), $meal->getCalorieCount());
+            //$redis->lpush($meal->getMealName(), $meal->getMealId(), $meal->getMealName(), $meal->getMealType(), $meal->getMealDate()->format('Y-m-d'), $meal->getMainIngredients(), $meal->getCalorieCount());
+
+            $objectString = serialize($meal);
+
+            $redis->set($meal->getMealName(), $objectString);
 
             // Save meal to disk
             $lastLastSave = $redis->lastsave();
