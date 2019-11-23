@@ -1,39 +1,84 @@
-<!-- HTML -->
 <template>
-  <div id="newMealForm">
-    <form action="http://192.168.0.110:8000/index.php" method="POST">
-      <!-- mealName -->
-      <label for="mealName">Meal Name:</label>
-      <input name="mealName" v-model="mealName" type="text" id="mealName" />
+  <div>
+    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-form-group
+        id="inputMealName"
+        label="Meal Name:"
+        label-for="inputMealName"
+        description="We'll never share your email with anyone else."
+      >
+        <b-form-input
+          id="input-1"
+          v-model="form.email"
+          type="email"
+          required
+          placeholder="Enter email"
+        ></b-form-input>
+      </b-form-group>
 
-      <!-- mealType -->
-      <label for="mealType">Meal Type:</label>
-      <select name="mealType" id="mealType">
-        <option value="Breakfast">Breakfast</option>
-        <option value="Lunch">Lunch</option>
-        <option value="Dinner">Dinner</option>
-      </select>
+      <b-form-group id="input-group-2" label="Your Name:" label-for="input-2">
+        <b-form-input
+          id="input-2"
+          v-model="form.name"
+          required
+          placeholder="Enter name"
+        ></b-form-input>
+      </b-form-group>
 
-      <!-- mealDate -->
-      <label for="mealDate">Meal Date:</label>
-      <input name="mealDate" id="mealDate" type="date" />
+      <b-form-group id="input-group-3" label="Food:" label-for="input-3">
+        <b-form-select
+          id="input-3"
+          v-model="form.food"
+          :options="foods"
+          required
+        ></b-form-select>
+      </b-form-group>
 
-      <!-- mealIngredients -->
-      <label for="mealIngredients">Meal Ingredients:</label>
-      <input name="mealIngredients" id="mealIngredients" type="text" />
+      <b-form-group id="input-group-4">
+        <b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
+          <b-form-checkbox value="me">Check me out</b-form-checkbox>
+          <b-form-checkbox value="that">Check that out</b-form-checkbox>
+        </b-form-checkbox-group>
+      </b-form-group>
 
-      <!-- mealCalorieCount -->
-      <label for="mealCalorieCount">Calorie Count:</label>
-      <input name="mealCalorieCount" id="mealCalorieCount" type="number"/>
-
-      <!-- Submit Button -->
-      <button type="submit" value="Submit">Submit</button>
-    </form>
+      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button type="reset" variant="danger">Reset</b-button>
+    </b-form>
   </div>
 </template>
 
-<!-- JavaScript -->
-<script></script>
-
-<!-- CSS -->
-<style></style>
+<script>
+  export default {
+    data() {
+      return {
+        form: {
+          mealName: '',
+          mealType: null,
+          food: null,
+          checked: []
+        },
+        foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+        show: true
+      }
+    },
+    methods: {
+      onSubmit(evt) {
+        evt.preventDefault()
+        alert(JSON.stringify(this.form))
+      },
+      onReset(evt) {
+        evt.preventDefault()
+        // Reset our form values
+        this.form.email = ''
+        this.form.name = ''
+        this.form.food = null
+        this.form.checked = []
+        // Trick to reset/clear native browser form validation state
+        this.show = false
+        this.$nextTick(() => {
+          this.show = true
+        })
+      }
+    }
+  }
+</script>
