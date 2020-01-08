@@ -6,7 +6,11 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 use DateTime;
+use TypeError;
 
+/**
+ * This is a FroogalMeals User class.
+ */
 class User {
     // Define State Variables
     
@@ -64,16 +68,17 @@ class User {
     }
 
     /**
-     * SET User Id
+     * SET the $userId state variable.
      * 
      * @param $userId
      */
     public function setUserId(uuid $userId): void {
         // Check if $userId is empty
         if(empty($userId)) {
-            throw new \TypeError("User Id must can;t be empty...");
+            throw new TypeError("User Id must can;t be empty...");
         }
 
+        // Set $userId
         $this->userId = $userId;
     }
 
@@ -154,6 +159,3 @@ class User {
         $this->userWeight = $userWeight;
     }
 }
-
-$thing = new User(Uuid::uuid4(), "Mark Waid", new DateTime(), 5.9, 238);
-var_dump($thing);

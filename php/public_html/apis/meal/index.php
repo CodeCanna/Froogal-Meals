@@ -2,7 +2,7 @@
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 require_once(dirname(__DIR__, 3) . "/Classes/Meal.php");
 
-use CodeCanna\Meal\Meal;
+use FroogalMeals\Meal\Meal;
 use \InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Predis\Client;
