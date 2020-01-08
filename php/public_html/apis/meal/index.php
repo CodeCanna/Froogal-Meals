@@ -36,7 +36,7 @@ try {
             $mealName = filter_input(INPUT_GET, 'mealName', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealType = filter_input(INPUT_GET, 'mealType', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealDate = filter_input(INPUT_GET, 'mealDate', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUITES);
-            $mealIngredients = filter_input(INPUT_GET, 'mainIngredients', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealIngredients = filter_input(INPUT_GET, 'mealMainIngredients', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealCalorieCount = filter_input(INPUT_GET, 'mealCalorieCount', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // If no get data is set reply data to all meals
@@ -67,7 +67,7 @@ try {
             $convertedCalorieCount = intval($_POST['mealCalorieCount']);
 
             // Create new Meal
-            $meal = new Meal(Uuid::uuid4()->toString(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealIngredients'], $convertedCalorieCount);
+            $meal = new Meal(Uuid::uuid4()->toString(), $_POST['mealName'], $_POST['mealType'], $mealDate, $_POST['mealMainIngredients'], $convertedCalorieCount);
 
             // Insert Object Values into Redis
             /*

@@ -2,43 +2,69 @@
   <div>
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group
-        id="inputMealName"
+        id="groupMealName"
         label="Meal Name:"
         label-for="inputMealName"
-        description="We'll never share your email with anyone else."
       >
         <b-form-input
-          id="input-1"
-          v-model="form.email"
-          type="email"
+          id="inputMealName"
+          v-model="form.mealName"
+          type="text"
           required
-          placeholder="Enter email"
+          placeholder="New Meal Name"
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-2" label="Your Name:" label-for="input-2">
-        <b-form-input
-          id="input-2"
-          v-model="form.name"
-          required
-          placeholder="Enter name"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group id="input-group-3" label="Food:" label-for="input-3">
+      <b-form-group
+        id="groupMealType"
+        label="Meal Type:"
+        label-for="selectMealType"
+      >
         <b-form-select
-          id="input-3"
-          v-model="form.food"
-          :options="foods"
+          id="selectMealType"
+          v-model="form.mealType"
+          :options="mealTypes"
           required
         ></b-form-select>
       </b-form-group>
 
-      <b-form-group id="input-group-4">
-        <b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
-          <b-form-checkbox value="me">Check me out</b-form-checkbox>
-          <b-form-checkbox value="that">Check that out</b-form-checkbox>
-        </b-form-checkbox-group>
+      <b-form-group
+        id="groupMealDate"
+        label="Meal Date:"
+        label-for="inputMealDate"
+      >
+        <b-form-input
+          type="date"
+          id="inputMealDate"
+          v-model="form.mealDate"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group
+        id="groupMealIngredients"
+        label="Meal Ingredients:"
+        label-for="inputMealIngredients"
+      >
+        <b-form-input
+          type="text"
+          id="inputMealIngredients"
+          v-model="form.mealIngredients"
+          required
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group
+        id="groupMealCalorieCount"
+        label="Calorie Count:"
+        label-for="inputMealCalorieCount"
+      >
+        <b-form-input
+          type="number"
+          id="inputMealCalorieCount"
+          v-model="form.mealCalorieCount"
+          required
+        ></b-form-input>
       </b-form-group>
 
       <b-button type="submit" variant="primary">Submit</b-button>
@@ -48,37 +74,66 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        form: {
-          mealName: '',
-          mealType: null,
-          food: null,
-          checked: []
-        },
-        foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
-        show: true
-      }
-    },
-    methods: {
-      onSubmit(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.form))
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      form: {
+        mealName: "",
+        mealType: null,
+        mealDate: "",
+        mealIngredients: "",
+        mealCalorieCount: ""
       },
-      onReset(evt) {
-        evt.preventDefault()
-        // Reset our form values
-        this.form.email = ''
-        this.form.name = ''
-        this.form.food = null
-        this.form.checked = []
-        // Trick to reset/clear native browser form validation state
-        this.show = false
-        this.$nextTick(() => {
-          this.show = true
+      mealTypes: [
+        { text: "Select One", value: null },
+        "Breakfast",
+        "Lunch",
+        "Dinner"
+      ],
+      show: true
+    };
+  },
+  methods: {
+    onSubmit(evt) {
+      alert(evt.type);
+      evt.preventDefault();
+      // POST the form data
+      axios
+        .post("http://10.0.0.44:8000/apis/meal/index.php", {
+          headers: {
+              "Content-type": "application/x-www-form-urlencoded"
+          },
+          body: {
+            mealName: this.form.mealName,
+            mealType: this.form.mealType,
+            mealDate: this.form.mealDate,
+            mealIngredients: this.form.mealIngredients,
+            mealCalorieCount: this.form.mealCalorieCount
+          }
         })
-      }
+        .then(function(response) {
+          alert(response);
+        })
+        .catch(function(error) {
+          throw new error();
+        });
+    },
+    onReset(evt) {
+      evt.preventDefault();
+      // Reset our form values
+      this.form.mealName = "";
+      this.form.mealType = null;
+      this.form.mealDate = "";
+      this.form.mealIngredients = "";
+      this.form.mealCalorieCount = "";
+      // Trick to reset/clear native browser form validation state
+      this.show = false;
+      this.$nextTick(() => {
+        this.show = true;
+      });
     }
   }
+};
 </script>
