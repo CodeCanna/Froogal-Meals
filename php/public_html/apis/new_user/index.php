@@ -37,7 +37,7 @@ try {
             // Create an object to insert into the DB
             $thing = new User(Uuid::uuid4(), "Mark", new DateTime(), 4.9, 309);
 
-            print($thing->getUserByUserId($redis, 'b03d00a5-f800-4991-bec2-f89b5992379d'));
+            $reply->data = $thing->getUserByUserId($redis, 'b03d00a5-f800-4991-bec2-f89b5992379d');
         } catch (Exception $exception) {
             throw new Exception("Something went wrong while filtering inputs...");
         }
@@ -57,7 +57,7 @@ try {
     throw new Exception("Couldn't connect to Redis...");
 }
 
-/*
+
 header("Content-type: application/json");
 
 // If the reply data is empty, unset the variable
@@ -66,4 +66,4 @@ if($reply->data === null) {
 }
 
 echo json_encode($reply);
-*/
+
