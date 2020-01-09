@@ -35,7 +35,7 @@ try {
             $mealId = filter_input(INPUT_GET, 'mealId', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealName = filter_input(INPUT_GET, 'mealName', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealType = filter_input(INPUT_GET, 'mealType', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $mealDate = filter_input(INPUT_GET, 'mealDate', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUITES);
+            $mealDate = filter_input(INPUT_GET, 'mealDate', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealIngredients = filter_input(INPUT_GET, 'mealMainIngredients', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $mealCalorieCount = filter_input(INPUT_GET, 'mealCalorieCount', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 

@@ -7,6 +7,7 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 use DateTime;
 use TypeError;
+use Predis\Client;
 
 /**
  * This is a FroogalMeals User class.
@@ -17,7 +18,7 @@ class User {
     /**
      * @var $userId
      */
-    public $userId;
+    protected $userId;
 
     /**
      * @var $userName
@@ -63,7 +64,7 @@ class User {
      * 
      * @return $userId
      */
-    public function getUserId(): uuid {
+    public function getUserId(): string {
         return $this->userId;
     }
 
@@ -88,7 +89,7 @@ class User {
      * @return $userName
      */
     public function getUserName(): string {
-        return $this->userName;
+        return strval($this->userName);
     }
 
     /**
@@ -109,7 +110,7 @@ class User {
      * @return $userBirthdate
      */
     public function getuserBirthdate(): DateTime {
-        return $this->userBirthdate;
+        return new DateTime($this->userBirthdate);
     }
 
     /**
@@ -128,7 +129,7 @@ class User {
      * @return $userHeight
      */
     public function getUserHeight(): float {
-        return $this->userHeight;
+        return floatval($this->userHeight);
     }
 
     public function setUserHeight(float $userHeight): void {
@@ -144,7 +145,7 @@ class User {
      * @return $userWeight
      */
     public function getUserWeight(): int {
-        return $this->userWeight;
+        return intval($this->userWeight);
     }
 
     /**
@@ -157,5 +158,33 @@ class User {
         }
         
         $this->userWeight = $userWeight;
+    }
+
+    /**
+     * This method inserts a serialized data object into Redis.
+     * 
+     * @param $redis
+     * @param $user
+     */
+    public function insert(Client $redis, User $user): void {
+        // Set the redis value by userId
+        $redis->set($user->getUserId(), serialize($user));
+    }
+
+    // GET FOO BY BARS //
+
+    /**
+     * getUserByUserId retrieves a user by the user's UUID and returns it.
+     * 
+     * @param $redis
+     * @param $userId
+     */
+    public function getUserByUserId(Client $redis, string $userId): User {
+        // Get the User by User's ID, will return a serialized object.
+        $user = $redis->get($userId);
+        $userObj = unserialize($user);
+
+        // Return the UNSERIALIZED object
+        return $userObj;
     }
 }
