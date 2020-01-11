@@ -20,6 +20,9 @@ try {
     $redis = new Client();
     $redis->connect('127.0.0.1');
 
+    // Set DB to Meal DB which is R1
+    $redis->select(1);
+
     // Check the connection by pinging the server
     try {
         $redis->ping();
@@ -32,12 +35,12 @@ try {
     if ($method === 'GET') {
         try {
             // Filter and Sanitize input
-            $mealId = filter_input(INPUT_GET, 'mealId', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $mealName = filter_input(INPUT_GET, 'mealName', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $mealType = filter_input(INPUT_GET, 'mealType', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $mealDate = filter_input(INPUT_GET, 'mealDate', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $mealIngredients = filter_input(INPUT_GET, 'mealMainIngredients', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-            $mealCalorieCount = filter_input(INPUT_GET, 'mealCalorieCount', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealId = filter_input(INPUT_GET, $_GET['mealId'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealName = filter_input(INPUT_GET, $_GET['mealName'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealType = filter_input(INPUT_GET, $_GET['mealType'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealDate = filter_input(INPUT_GET, $_GET['mealDate'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealIngredients = filter_input(INPUT_GET, $_GET['mealMainIngredients'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $mealCalorieCount = filter_input(INPUT_GET, $_GET['mealCalorieCount'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
             // If no get data is set reply data to all meals
             if(empty($mealName)) {

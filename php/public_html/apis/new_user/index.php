@@ -19,12 +19,15 @@ try {
     $redis = new Client();
     $redis->connect('127.0.0.1');
 
+    // Set DB to User DB which is R0
+    $redis->select(0);
+
     // Check the connection by pinging the server
     try {
         $redis->ping();
     } catch (Predis\Connection\ConnectionException $exception) {
         $exceptionType = get_class($exception);
-        throw new $exceptionType($exception->getMessage());
+        throw new $exceptionType("Cannot connecto to a Redis instance...");
     }
 
     // Do things based on the Request Method
@@ -34,25 +37,35 @@ try {
             $userId = filter_input(INPUT_GET, 'userId', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $userName = filter_input(INPUT_GET, 'userName', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-            // Create an object to insert into the DB
-            $thing = new User(Uuid::uuid4(), "Mark", new DateTime(), 4.9, 309);
-
-            $reply->data = $thing->getUserByUserId($redis, 'b03d00a5-f800-4991-bec2-f89b5992379d');
+            $reply->data = $userId;
         } catch (Exception $exception) {
             throw new Exception("Something went wrong while filtering inputs...");
         }
-        $reply->data = unserialize($redis->get("Mark"));
     } else if ($method === 'POST') {
-        echo "POST";
+        try {
+            // Generate a new user UUID
+            $userId = Uuid::uuid4();
+
+            // Filter and sanitize post inputs
+            $userRealName = filter_input(INPUT_POST, $_POST['userRealName'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $userName = filter_input(INPUT_POST, $_POST['userName'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $userEmail = filter_input(INPUT_POST, $_POST['userEmail'], FILTER_SANITIZE_EMAIL, FILTER_VALIDATE_EMAIL);
+            $userZipCode = filter_input(INPUT_POST, $_POST['userZipCode'], FILTER_VALIDATE_INT);
+            $userBirthdate = filter_input(INPUT_POST, $_POST['userBirthdate'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $userHeight = filter_input(INPUT_POST, $_POST['userHeight'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_VALIDATE_FLOAT);
+            $userWeight = filter_input(INPUT_POST, $_POST['userWeight'], FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT);
+        } catch() {
+
+        }
     }
 
 
 
     // Serialize the object
-    $thingString = serialize($thing);
+    //$thingString = serialize($thing);
 
     // Insert Serialized object
-    $redis->set($thing->getUserName(), $thingString);
+    //$redis->set($thing->getUserName(), $thingString);
 } catch (Predis\Response\ServerException $exception) {
     throw new Exception("Couldn't connect to Redis...");
 }
@@ -61,9 +74,8 @@ try {
 header("Content-type: application/json");
 
 // If the reply data is empty, unset the variable
-if($reply->data === null) {
-	unset($reply->data);
+if ($reply->data === null) {
+    unset($reply->data);
 }
 
 echo json_encode($reply);
-

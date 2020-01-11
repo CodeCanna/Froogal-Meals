@@ -6,11 +6,15 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 use DateTime;
+use Exception;
+use PharIo\Manifest\Email;
+use PharIo\Manifest\InvalidUrlException;
 use TypeError;
 use Predis\Client;
+use SplFixedArray;
 
 /**
- * This is a FroogalMeals User class.
+ * This is a FroogalMeals User class.  This class defines a user along with all of the user's info.
  */
 class User {
     // Define State Variables
@@ -21,24 +25,39 @@ class User {
     protected $userId;
 
     /**
+     * @var $userRealName
+     */
+    protected $userRealName;
+
+    /**
      * @var $userName
      */
-    public $userName;
+    protected $userName;
+
+    /**
+     * @var $userEmail
+     */
+    protected $userEmail;
+
+    /**
+     * @var $userZipCode
+     */
+    protected $userZipCode;
 
     /**
      * @var $userBirthdate
      */
-    public $userBirthdate;
+    protected $userBirthdate;
 
     /**
      * @var $userHeight
      */
-    public $userHeight;
+    protected $userHeight;
 
     /**
      * @var $userWeight
      */
-    public $userWeight;
+    protected $userWeight;
 
     /**
      * Constructor builds a user PHP object
@@ -49,9 +68,12 @@ class User {
      * @param $userHeight
      * @param $userWeight
      */
-    public function __construct(uuid $userId, string $userName, DateTime $userBirthdate, float $userHeight, int $userWeight) {
+    public function __construct(uuid $userId, string $userRealName, string $userName, string $userEmail, int $userZipCode, DateTime $userBirthdate, float $userHeight, int $userWeight) {
         $this->setUserId($userId);
+        $this->setUserRealName($userRealName);
         $this->setUserName($userName);
+        $this->setUserEmail($userEmail);
+        $this->setUserZipCode($userZipCode);
         $this->setuserBirthdate($userBirthdate);
         $this->setUserHeight($userHeight);
         $this->setUserWeight($userWeight);
@@ -84,6 +106,24 @@ class User {
     }
 
     /**
+     * GET $userRealName
+     * 
+     */
+    public function getUserRealName(): string {
+        return strval($this->userRealName);
+    }
+
+    /**
+     * SET $userRealName
+     */
+    public function setUserRealName(string $userRealName): void {
+        // Check if $userRealName is empty
+        if(empty($userRealName)) {
+            throw new InvalidUrlException("User's real name cannot be empty...");
+        }
+    }
+
+    /**
      * GET User Name
      * 
      * @return $userName
@@ -104,6 +144,38 @@ class User {
         }
 
         $this->userName = $userName;
+    }
+
+    /**
+     * GET $userEmail
+     */
+    public function getUserEmail() {
+        return $this->userEmail;
+    }
+
+    /**
+     * SET $userEmail
+     */
+    public function setUserEmail(string $userEmail) {
+        try {
+            $varifiedUserEmail = filter_var($userEmail, FILTER_SANITIZE_EMAIL);
+        } catch(Exception $exception) {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * 
+     */
+    public function getUserZipCode(): int {
+        return $this->userZipCode;
+    }
+
+    /**
+     * 
+     */
+    public function setUserZipCode($userZipCode): void {
+        $this->userZipCode = $userZipCode;
     }
 
     /**
@@ -186,5 +258,9 @@ class User {
 
         // Return the UNSERIALIZED object
         return $userObj;
+    }
+
+    public function getAllUsers(Client $redis): SplFixedArray {
+        
     }
 }
